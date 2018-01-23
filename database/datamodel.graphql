@@ -1,0 +1,26 @@
+type Post {
+  id: ID! @unique
+  isPublished: Boolean! @default(value: "false")
+  title: String!
+  text: String!
+}
+
+type Person {
+  id: ID! @unique
+  firstName: String!
+  lastName: String!
+  gender: Gender!
+  birthDate: DateTime!
+  address: String!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+type Position {
+  id: ID @unique
+  name: String!
+  description: String
+}
