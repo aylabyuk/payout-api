@@ -12,6 +12,8 @@ type Person {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  position: Position @relation(name: "People")
+  daysOfWork: [DayOfWork!]! @relation(name: "DaysPerson")
 }
 
 enum Gender {
@@ -20,7 +22,18 @@ enum Gender {
 }
 
 type Position {
-  id: ID @unique
+  id: ID! @unique
   name: String!
   description: String
+  ratePerHour: Int!
+  staffs: [Person!]! @relation(name: "People")
+}
+
+type DayOfWork {
+  id: ID! @unique
+  person: Person! @relation(name: "DaysPerson")
+  date: DateTime!
+  startTime: DateTime!
+  endTime: DateTime!
+  paid: Boolean! @default(value: "false")
 }
