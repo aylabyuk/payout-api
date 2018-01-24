@@ -1,12 +1,12 @@
 import { Prisma } from './generated/prisma'
-
 const jwt = require('jsonwebtoken')
 
-const APP_SECRET = 'appsecret321'
+export const APP_SECRET = 'appsecret321'
 
-function getUserId(ctx) {
+export function getUserId(ctx) {
   const Authorization = ctx.request.get('Authorization')
-  if (Authorization) {
+  
+  if (Authorization && Authorization !== "null") {
     const token = Authorization.replace('Bearer ', '')
     const { userId } = jwt.verify(token, APP_SECRET)
     return userId
