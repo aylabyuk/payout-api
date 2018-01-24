@@ -2,9 +2,11 @@ import { GraphQLServer } from 'graphql-yoga'
 import { importSchema } from 'graphql-import'
 import { Prisma } from './generated/prisma'
 import { Context } from './utils'
+import { me, signup, login, AuthPayload } from './auth'
 
 const resolvers = {
   Query: {
+    me,
     person(parent, { id }, context: Context, info) {
       return context.db.query.person({ where: { id: id } }, info)
     },
@@ -19,6 +21,8 @@ const resolvers = {
     }
   },
   Mutation: {
+    signup,
+    login,
     createRole(parent, args, context: Context, info) {
       return context.db.mutation.createRole(
         { data: args },

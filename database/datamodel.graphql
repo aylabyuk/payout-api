@@ -1,4 +1,4 @@
-type Person @model {
+type Person {
   id: ID! @unique
   firstName: String!
   lastName: String!
@@ -14,19 +14,28 @@ enum Gender {
   FEMALE
 }
 
-type Role @model {
+type Role {
   id: ID! @unique
-  name: String!
+  name: String! @unique
   description: String
   ratePerHour: Int!
   staffs: [Person!]! @relation(name: "People")
 }
 
-type DayOfWork @model {
+type DayOfWork {
   id: ID! @unique
   person: Person! @relation(name: "DaysPerson")
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
+  amount: Int!
   paid: Boolean! @default(value: "false")
+}
+
+type User {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String! @unique
+  password: String!
 }

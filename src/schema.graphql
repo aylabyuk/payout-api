@@ -1,6 +1,7 @@
 # import Post from "./generated/prisma.graphql"
 
 type Query {
+  me: User
   person(id: ID!): Person
   people: [Person]
   role(id: ID!): Role
@@ -9,4 +10,17 @@ type Query {
 
 type Mutation {
   createRole(name: String!, description: String, ratePerHour: Int!): Role
+  signup(email: String!, password: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
 }

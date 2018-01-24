@@ -11,6 +11,7 @@ type DayOfWork implements Node {
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
+  amount: Int!
   paid: Boolean!
 }
 
@@ -33,6 +34,14 @@ type Role implements Node {
   staffs(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person!]
 }
 
+type User implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+}
+
 
 #
 # Other Types
@@ -47,6 +56,10 @@ type AggregatePerson {
 }
 
 type AggregateRole {
+  count: Int!
+}
+
+type AggregateUser {
   count: Int!
 }
 
@@ -66,6 +79,7 @@ input DayOfWorkCreateInput {
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
+  amount: Int!
   paid: Boolean
   person: PersonCreateOneWithoutDaysOfWorkInput!
 }
@@ -79,6 +93,7 @@ input DayOfWorkCreateWithoutPersonInput {
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
+  amount: Int!
   paid: Boolean
 }
 
@@ -96,6 +111,8 @@ enum DayOfWorkOrderByInput {
   startTime_DESC
   endTime_ASC
   endTime_DESC
+  amount_ASC
+  amount_DESC
   paid_ASC
   paid_DESC
   updatedAt_ASC
@@ -109,6 +126,7 @@ type DayOfWorkPreviousValues {
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
+  amount: Int!
   paid: Boolean!
 }
 
@@ -133,6 +151,7 @@ input DayOfWorkUpdateInput {
   date: DateTime
   startTime: DateTime
   endTime: DateTime
+  amount: Int
   paid: Boolean
   person: PersonUpdateOneWithoutDaysOfWorkInput
 }
@@ -150,6 +169,7 @@ input DayOfWorkUpdateWithoutPersonDataInput {
   date: DateTime
   startTime: DateTime
   endTime: DateTime
+  amount: Int
   paid: Boolean
 }
 
@@ -205,6 +225,14 @@ input DayOfWorkWhereInput {
   endTime_lte: DateTime
   endTime_gt: DateTime
   endTime_gte: DateTime
+  amount: Int
+  amount_not: Int
+  amount_in: [Int!]
+  amount_not_in: [Int!]
+  amount_lt: Int
+  amount_lte: Int
+  amount_gt: Int
+  amount_gte: Int
   paid: Boolean
   paid_not: Boolean
   person: PersonWhereInput
@@ -225,21 +253,27 @@ type Mutation {
   createPerson(data: PersonCreateInput!): Person!
   createRole(data: RoleCreateInput!): Role!
   createDayOfWork(data: DayOfWorkCreateInput!): DayOfWork!
+  createUser(data: UserCreateInput!): User!
   updatePerson(data: PersonUpdateInput!, where: PersonWhereUniqueInput!): Person
   updateRole(data: RoleUpdateInput!, where: RoleWhereUniqueInput!): Role
   updateDayOfWork(data: DayOfWorkUpdateInput!, where: DayOfWorkWhereUniqueInput!): DayOfWork
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deletePerson(where: PersonWhereUniqueInput!): Person
   deleteRole(where: RoleWhereUniqueInput!): Role
   deleteDayOfWork(where: DayOfWorkWhereUniqueInput!): DayOfWork
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertPerson(where: PersonWhereUniqueInput!, create: PersonCreateInput!, update: PersonUpdateInput!): Person!
   upsertRole(where: RoleWhereUniqueInput!, create: RoleCreateInput!, update: RoleUpdateInput!): Role!
   upsertDayOfWork(where: DayOfWorkWhereUniqueInput!, create: DayOfWorkCreateInput!, update: DayOfWorkUpdateInput!): DayOfWork!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput!): BatchPayload!
   updateManyRoles(data: RoleUpdateInput!, where: RoleWhereInput!): BatchPayload!
   updateManyDayOfWorks(data: DayOfWorkUpdateInput!, where: DayOfWorkWhereInput!): BatchPayload!
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
   deleteManyPersons(where: PersonWhereInput!): BatchPayload!
   deleteManyRoles(where: RoleWhereInput!): BatchPayload!
   deleteManyDayOfWorks(where: DayOfWorkWhereInput!): BatchPayload!
+  deleteManyUsers(where: UserWhereInput!): BatchPayload!
 }
 
 enum MutationType {
@@ -520,12 +554,15 @@ type Query {
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   dayOfWorks(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DayOfWork]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   person(where: PersonWhereUniqueInput!): Person
   role(where: RoleWhereUniqueInput!): Role
   dayOfWork(where: DayOfWorkWhereUniqueInput!): DayOfWork
+  user(where: UserWhereUniqueInput!): User
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   dayOfWorksConnection(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DayOfWorkConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   node(id: ID!): Node
 }
 
@@ -653,10 +690,139 @@ input RoleWhereInput {
 
 input RoleWhereUniqueInput {
   id: ID
+  name: String
 }
 
 type Subscription {
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   dayOfWork(where: DayOfWorkSubscriptionWhereInput): DayOfWorkSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  email: String!
+  password: String!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  email_ASC
+  email_DESC
+  password_ASC
+  password_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  email: String!
+  password: String!
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+}
+
+input UserUpdateInput {
+  email: String
+  password: String
+}
+
+input UserWhereInput {
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  email: String
 }
