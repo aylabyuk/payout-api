@@ -5,35 +5,26 @@ import { Context } from './utils'
 
 const resolvers = {
   Query: {
-    feed(parent, args, context: Context, info) {
-      return context.db.query.posts({ where: { isPublished: true } }, info)
+    person(parent, { id }, context: Context, info) {
+      return context.db.query.person({ where: { id: id } }, info)
     },
-    drafts(parent, args, context: Context, info) {
-      return context.db.query.posts({ where: { isPublished: false } }, info)
+    people(parent, args, context: Context, info) {
+      return context.db.query.persons({}, info)
     },
-    post(parent, { id }, context: Context, info) {
-      return context.db.query.post({ where: { id: id } }, info)
+    role(parent, { id }, context: Context, info) {
+      return context.db.query.role({ where: { id: id } }, info)
     },
+    roles(parent, args, context: Context, info) {
+      return context.db.query.roles({}, info)
+    }
   },
   Mutation: {
-    createDraft(parent, { title, text }, context: Context, info) {
-      return context.db.mutation.createPost(
-        { data: { title, text } },
-        info,
+    createRole(parent, args, context: Context, info) {
+      return context.db.mutation.createRole(
+        { data: args },
+        info
       )
-    },
-    deletePost(parent, { id }, context: Context, info) {
-      return context.db.mutation.deletePost({ where: { id } }, info)
-    },
-    publish(parent, { id }, context: Context, info) {
-      return context.db.mutation.updatePost(
-        {
-          where: { id },
-          data: { isPublished: true },
-        },
-        info,
-      )
-    },
+    }
   },
 }
 

@@ -1,18 +1,11 @@
-type Post {
-  id: ID! @unique
-  isPublished: Boolean! @default(value: "false")
-  title: String!
-  text: String!
-}
-
-type Person {
+type Person @model {
   id: ID! @unique
   firstName: String!
   lastName: String!
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  position: Position @relation(name: "People")
+  role: Role @relation(name: "People")
   daysOfWork: [DayOfWork!]! @relation(name: "DaysPerson")
 }
 
@@ -21,7 +14,7 @@ enum Gender {
   FEMALE
 }
 
-type Position {
+type Role @model {
   id: ID! @unique
   name: String!
   description: String
@@ -29,7 +22,7 @@ type Position {
   staffs: [Person!]! @relation(name: "People")
 }
 
-type DayOfWork {
+type DayOfWork @model {
   id: ID! @unique
   person: Person! @relation(name: "DaysPerson")
   date: DateTime!
