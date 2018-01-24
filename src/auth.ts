@@ -1,6 +1,6 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 import { Context, getUserId, APP_SECRET } from './utils'
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 // resolve the `AuthPayload` type
 export const AuthPayload = {
