@@ -9,6 +9,11 @@ type Query {
 }
 
 type Mutation {
+  createPerson(firstName: String!, lastName: String!, gender: Gender!, birthdate:DateTime!, 
+    address: String!, roleId: ID!): Person
+  updatePerson(id: ID!, firstName: String!, lastName: String!, gender: Gender!, birthdate:DateTime!, 
+    address: String!, roleId: ID!): Person
+  deletePerson(id: ID!): Person
   createRole(name: String!, description: String, ratePerHour: Int!): Role
   updateRole(id: ID!, name: String, description: String, ratePerHour: Int): Role
   deleteRole(id: ID!): Role

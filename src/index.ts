@@ -23,6 +23,43 @@ const resolvers = {
   Mutation: {
     signup,
     login,
+    createPerson(parent, args, context: Context, info) {
+      return context.db.mutation.createPerson({
+         data: {
+          firstName: args.firstName,
+          lastName: args.lastName,
+          gender: args.gender,
+          birthDate: args.birthdate,
+          address: args.address,
+          role: { connect: { id: args.roleId }}
+         }
+      },
+        info
+      )
+    },
+    updatePerson(parent, args, context: Context, info) {
+
+      return context.db.mutation.updatePerson({
+        data: {
+          firstName: args.firstName,
+          lastName: args.lastName,
+          gender: args.gender,
+          birthDate: args.birthdate,
+          address: args.address,
+          role: { connect: { id: args.roleId } }
+        },
+        where: {
+          id: args.id,
+        }
+      })
+    },
+    deletePerson(parent, { id }, context: Context, info) {
+      return context.db.mutation.deletePerson({
+        where: {
+          id
+        }
+      })
+    },
     createRole(parent, args, context: Context, info) {
       return context.db.mutation.createRole(
         { data: args },
@@ -67,7 +104,8 @@ const server = new GraphQLServer({
   context: req => ({
     ...req,
     db: new Prisma({
-      endpoint: 'https://eu1.prisma.sh/public-tinydutchess-157/payout-app/dev', // the endpoint of the Prisma DB service
+      endpoint: 'http://localhost:4466/payout-app/dev',
+      // endpoint: 'https://eu1.prisma.sh/public-tinydutchess-157/payout-app/dev', // the endpoint of the Prisma DB service
       secret: 'mysecret123', // specified in database/prisma.yml
       debug: true, // log all GraphQL queries & mutations
     }),
