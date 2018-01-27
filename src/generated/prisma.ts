@@ -26,7 +26,7 @@ type Person implements Node {
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role(where: PersonWhereInput): Person
+  role(where: RoleWhereInput): Role
   daysOfWork(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DayOfWork!]
 }
 
@@ -309,7 +309,7 @@ input PersonCreateInput {
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role: PersonCreateOneWithoutRoleInput
+  role: RoleCreateOneWithoutStaffsInput
   daysOfWork: DayOfWorkCreateManyWithoutPersonInput
 }
 
@@ -323,18 +323,13 @@ input PersonCreateOneWithoutDaysOfWorkInput {
   connect: PersonWhereUniqueInput
 }
 
-input PersonCreateOneWithoutRoleInput {
-  create: PersonCreateWithoutRoleInput
-  connect: PersonWhereUniqueInput
-}
-
 input PersonCreateWithoutDaysOfWorkInput {
   firstName: String!
   lastName: String!
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role: PersonCreateOneWithoutRoleInput
+  role: RoleCreateOneWithoutStaffsInput
 }
 
 input PersonCreateWithoutRoleInput {
@@ -402,7 +397,7 @@ input PersonUpdateInput {
   gender: Gender
   birthDate: DateTime
   address: String
-  role: PersonUpdateOneWithoutRoleInput
+  role: RoleUpdateOneWithoutStaffsInput
   daysOfWork: DayOfWorkUpdateManyWithoutPersonInput
 }
 
@@ -424,22 +419,13 @@ input PersonUpdateOneWithoutDaysOfWorkInput {
   upsert: PersonUpsertWithoutDaysOfWorkInput
 }
 
-input PersonUpdateOneWithoutRoleInput {
-  create: PersonCreateWithoutRoleInput
-  connect: PersonWhereUniqueInput
-  disconnect: PersonWhereUniqueInput
-  delete: PersonWhereUniqueInput
-  update: PersonUpdateWithoutRoleInput
-  upsert: PersonUpsertWithoutRoleInput
-}
-
 input PersonUpdateWithoutDaysOfWorkDataInput {
   firstName: String
   lastName: String
   gender: Gender
   birthDate: DateTime
   address: String
-  role: PersonUpdateOneWithoutRoleInput
+  role: RoleUpdateOneWithoutStaffsInput
 }
 
 input PersonUpdateWithoutDaysOfWorkInput {
@@ -544,7 +530,7 @@ input PersonWhereInput {
   address_not_starts_with: String
   address_ends_with: String
   address_not_ends_with: String
-  role: PersonWhereInput
+  role: RoleWhereInput
   daysOfWork_every: DayOfWorkWhereInput
   daysOfWork_some: DayOfWorkWhereInput
   daysOfWork_none: DayOfWorkWhereInput
@@ -581,6 +567,17 @@ input RoleCreateInput {
   description: String
   ratePerHour: Int!
   staffs: PersonCreateManyWithoutRoleInput
+}
+
+input RoleCreateOneWithoutStaffsInput {
+  create: RoleCreateWithoutStaffsInput
+  connect: RoleWhereUniqueInput
+}
+
+input RoleCreateWithoutStaffsInput {
+  name: String!
+  description: String
+  ratePerHour: Int!
 }
 
 type RoleEdge {
@@ -632,6 +629,32 @@ input RoleUpdateInput {
   description: String
   ratePerHour: Int
   staffs: PersonUpdateManyWithoutRoleInput
+}
+
+input RoleUpdateOneWithoutStaffsInput {
+  create: RoleCreateWithoutStaffsInput
+  connect: RoleWhereUniqueInput
+  disconnect: RoleWhereUniqueInput
+  delete: RoleWhereUniqueInput
+  update: RoleUpdateWithoutStaffsInput
+  upsert: RoleUpsertWithoutStaffsInput
+}
+
+input RoleUpdateWithoutStaffsDataInput {
+  name: String
+  description: String
+  ratePerHour: Int
+}
+
+input RoleUpdateWithoutStaffsInput {
+  where: RoleWhereUniqueInput!
+  data: RoleUpdateWithoutStaffsDataInput!
+}
+
+input RoleUpsertWithoutStaffsInput {
+  where: RoleWhereUniqueInput!
+  update: RoleUpdateWithoutStaffsDataInput!
+  create: RoleCreateWithoutStaffsInput!
 }
 
 input RoleWhereInput {
@@ -903,9 +926,11 @@ export type MutationType =
   'UPDATED' |
   'DELETED'
 
-export interface DayOfWorkCreateManyWithoutPersonInput {
-  create?: DayOfWorkCreateWithoutPersonInput[] | DayOfWorkCreateWithoutPersonInput
-  connect?: DayOfWorkWhereUniqueInput[] | DayOfWorkWhereUniqueInput
+export interface RoleCreateInput {
+  name: String
+  description?: String
+  ratePerHour: Int
+  staffs?: PersonCreateManyWithoutRoleInput
 }
 
 export interface PersonWhereInput {
@@ -979,7 +1004,7 @@ export interface PersonWhereInput {
   address_not_starts_with?: String
   address_ends_with?: String
   address_not_ends_with?: String
-  role?: PersonWhereInput
+  role?: RoleWhereInput
   daysOfWork_every?: DayOfWorkWhereInput
   daysOfWork_some?: DayOfWorkWhereInput
   daysOfWork_none?: DayOfWorkWhereInput
@@ -994,14 +1019,10 @@ export interface PersonUpdateManyWithoutRoleInput {
   upsert?: PersonUpsertWithoutRoleInput[] | PersonUpsertWithoutRoleInput
 }
 
-export interface PersonUpdateInput {
-  firstName?: String
-  lastName?: String
-  gender?: Gender
-  birthDate?: DateTime
-  address?: String
-  role?: PersonUpdateOneWithoutRoleInput
-  daysOfWork?: DayOfWorkUpdateManyWithoutPersonInput
+export interface RoleUpdateWithoutStaffsDataInput {
+  name?: String
+  description?: String
+  ratePerHour?: Int
 }
 
 export interface RoleUpdateInput {
@@ -1011,35 +1032,33 @@ export interface RoleUpdateInput {
   staffs?: PersonUpdateManyWithoutRoleInput
 }
 
-export interface DayOfWorkCreateInput {
-  date: DateTime
-  startTime: DateTime
-  endTime: DateTime
-  amount: Int
-  paid?: Boolean
-  person: PersonCreateOneWithoutDaysOfWorkInput
-}
-
-export interface PersonUpsertWithoutRoleInput {
-  where: PersonWhereUniqueInput
-  update: PersonUpdateWithoutRoleDataInput
-  create: PersonCreateWithoutRoleInput
-}
-
-export interface UserSubscriptionWhereInput {
-  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
-  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: UserWhereInput
+export interface PersonCreateOneWithoutDaysOfWorkInput {
+  create?: PersonCreateWithoutDaysOfWorkInput
+  connect?: PersonWhereUniqueInput
 }
 
 export interface DayOfWorkUpsertWithoutPersonInput {
   where: DayOfWorkWhereUniqueInput
   update: DayOfWorkUpdateWithoutPersonDataInput
   create: DayOfWorkCreateWithoutPersonInput
+}
+
+export interface RoleSubscriptionWhereInput {
+  AND?: RoleSubscriptionWhereInput[] | RoleSubscriptionWhereInput
+  OR?: RoleSubscriptionWhereInput[] | RoleSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: RoleWhereInput
+}
+
+export interface DayOfWorkUpdateWithoutPersonDataInput {
+  date?: DateTime
+  startTime?: DateTime
+  endTime?: DateTime
+  amount?: Int
+  paid?: Boolean
 }
 
 export interface RoleWhereInput {
@@ -1100,37 +1119,14 @@ export interface RoleWhereInput {
   staffs_none?: PersonWhereInput
 }
 
-export interface DayOfWorkUpdateWithoutPersonDataInput {
-  date?: DateTime
-  startTime?: DateTime
-  endTime?: DateTime
-  amount?: Int
-  paid?: Boolean
-}
-
-export interface RoleSubscriptionWhereInput {
-  AND?: RoleSubscriptionWhereInput[] | RoleSubscriptionWhereInput
-  OR?: RoleSubscriptionWhereInput[] | RoleSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: RoleWhereInput
-}
-
 export interface DayOfWorkUpdateWithoutPersonInput {
   where: DayOfWorkWhereUniqueInput
   data: DayOfWorkUpdateWithoutPersonDataInput
 }
 
-export interface PersonSubscriptionWhereInput {
-  AND?: PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput
-  OR?: PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: PersonWhereInput
+export interface UserUpdateInput {
+  email?: String
+  password?: String
 }
 
 export interface DayOfWorkUpdateManyWithoutPersonInput {
@@ -1146,66 +1142,77 @@ export interface PersonWhereUniqueInput {
   id?: ID_Input
 }
 
-export interface PersonUpdateWithoutRoleDataInput {
-  firstName?: String
-  lastName?: String
-  gender?: Gender
-  birthDate?: DateTime
-  address?: String
-  daysOfWork?: DayOfWorkUpdateManyWithoutPersonInput
-}
-
-export interface DayOfWorkWhereUniqueInput {
-  id?: ID_Input
-}
-
 export interface PersonCreateInput {
   firstName: String
   lastName: String
   gender: Gender
   birthDate: DateTime
   address: String
-  role?: PersonCreateOneWithoutRoleInput
+  role?: RoleCreateOneWithoutStaffsInput
   daysOfWork?: DayOfWorkCreateManyWithoutPersonInput
 }
 
-export interface PersonUpsertWithoutDaysOfWorkInput {
-  where: PersonWhereUniqueInput
-  update: PersonUpdateWithoutDaysOfWorkDataInput
-  create: PersonCreateWithoutDaysOfWorkInput
+export interface DayOfWorkWhereUniqueInput {
+  id?: ID_Input
 }
 
-export interface PersonCreateOneWithoutRoleInput {
-  create?: PersonCreateWithoutRoleInput
+export interface RoleCreateOneWithoutStaffsInput {
+  create?: RoleCreateWithoutStaffsInput
+  connect?: RoleWhereUniqueInput
+}
+
+export interface PersonUpdateWithoutDaysOfWorkDataInput {
+  firstName?: String
+  lastName?: String
+  gender?: Gender
+  birthDate?: DateTime
+  address?: String
+  role?: RoleUpdateOneWithoutStaffsInput
+}
+
+export interface RoleCreateWithoutStaffsInput {
+  name: String
+  description?: String
+  ratePerHour: Int
+}
+
+export interface PersonUpdateOneWithoutDaysOfWorkInput {
+  create?: PersonCreateWithoutDaysOfWorkInput
   connect?: PersonWhereUniqueInput
+  disconnect?: PersonWhereUniqueInput
+  delete?: PersonWhereUniqueInput
+  update?: PersonUpdateWithoutDaysOfWorkInput
+  upsert?: PersonUpsertWithoutDaysOfWorkInput
 }
 
-export interface PersonUpdateWithoutDaysOfWorkInput {
+export interface DayOfWorkCreateManyWithoutPersonInput {
+  create?: DayOfWorkCreateWithoutPersonInput[] | DayOfWorkCreateWithoutPersonInput
+  connect?: DayOfWorkWhereUniqueInput[] | DayOfWorkWhereUniqueInput
+}
+
+export interface PersonUpsertWithoutRoleInput {
   where: PersonWhereUniqueInput
-  data: PersonUpdateWithoutDaysOfWorkDataInput
+  update: PersonUpdateWithoutRoleDataInput
+  create: PersonCreateWithoutRoleInput
 }
 
-export interface PersonCreateWithoutRoleInput {
-  firstName: String
-  lastName: String
-  gender: Gender
-  birthDate: DateTime
-  address: String
-  daysOfWork?: DayOfWorkCreateManyWithoutPersonInput
-}
-
-export interface DayOfWorkUpdateInput {
-  date?: DateTime
-  startTime?: DateTime
-  endTime?: DateTime
-  amount?: Int
+export interface DayOfWorkCreateWithoutPersonInput {
+  date: DateTime
+  startTime: DateTime
+  endTime: DateTime
+  amount: Int
   paid?: Boolean
-  person?: PersonUpdateOneWithoutDaysOfWorkInput
 }
 
 export interface PersonUpdateWithoutRoleInput {
   where: PersonWhereUniqueInput
   data: PersonUpdateWithoutRoleDataInput
+}
+
+export interface RoleUpsertWithoutStaffsInput {
+  where: RoleWhereUniqueInput
+  update: RoleUpdateWithoutStaffsDataInput
+  create: RoleCreateWithoutStaffsInput
 }
 
 export interface DayOfWorkSubscriptionWhereInput {
@@ -1218,12 +1225,9 @@ export interface DayOfWorkSubscriptionWhereInput {
   node?: DayOfWorkWhereInput
 }
 
-export interface DayOfWorkCreateWithoutPersonInput {
-  date: DateTime
-  startTime: DateTime
-  endTime: DateTime
-  amount: Int
-  paid?: Boolean
+export interface PersonCreateManyWithoutRoleInput {
+  create?: PersonCreateWithoutRoleInput[] | PersonCreateWithoutRoleInput
+  connect?: PersonWhereUniqueInput[] | PersonWhereUniqueInput
 }
 
 export interface UserWhereInput {
@@ -1289,11 +1293,13 @@ export interface UserWhereInput {
   password_not_ends_with?: String
 }
 
-export interface RoleCreateInput {
-  name: String
-  description?: String
-  ratePerHour: Int
-  staffs?: PersonCreateManyWithoutRoleInput
+export interface PersonCreateWithoutRoleInput {
+  firstName: String
+  lastName: String
+  gender: Gender
+  birthDate: DateTime
+  address: String
+  daysOfWork?: DayOfWorkCreateManyWithoutPersonInput
 }
 
 export interface RoleWhereUniqueInput {
@@ -1301,46 +1307,18 @@ export interface RoleWhereUniqueInput {
   name?: String
 }
 
-export interface PersonCreateManyWithoutRoleInput {
-  create?: PersonCreateWithoutRoleInput[] | PersonCreateWithoutRoleInput
-  connect?: PersonWhereUniqueInput[] | PersonWhereUniqueInput
+export interface DayOfWorkCreateInput {
+  date: DateTime
+  startTime: DateTime
+  endTime: DateTime
+  amount: Int
+  paid?: Boolean
+  person: PersonCreateOneWithoutDaysOfWorkInput
 }
 
-export interface PersonUpdateWithoutDaysOfWorkDataInput {
-  firstName?: String
-  lastName?: String
-  gender?: Gender
-  birthDate?: DateTime
-  address?: String
-  role?: PersonUpdateOneWithoutRoleInput
-}
-
-export interface UserCreateInput {
-  email: String
-  password: String
-}
-
-export interface PersonCreateWithoutDaysOfWorkInput {
-  firstName: String
-  lastName: String
-  gender: Gender
-  birthDate: DateTime
-  address: String
-  role?: PersonCreateOneWithoutRoleInput
-}
-
-export interface PersonCreateOneWithoutDaysOfWorkInput {
-  create?: PersonCreateWithoutDaysOfWorkInput
-  connect?: PersonWhereUniqueInput
-}
-
-export interface PersonUpdateOneWithoutRoleInput {
-  create?: PersonCreateWithoutRoleInput
-  connect?: PersonWhereUniqueInput
-  disconnect?: PersonWhereUniqueInput
-  delete?: PersonWhereUniqueInput
-  update?: PersonUpdateWithoutRoleInput
-  upsert?: PersonUpsertWithoutRoleInput
+export interface PersonUpdateWithoutDaysOfWorkInput {
+  where: PersonWhereUniqueInput
+  data: PersonUpdateWithoutDaysOfWorkDataInput
 }
 
 export interface DayOfWorkWhereInput {
@@ -1397,23 +1375,91 @@ export interface DayOfWorkWhereInput {
   person?: PersonWhereInput
 }
 
-export interface PersonUpdateOneWithoutDaysOfWorkInput {
-  create?: PersonCreateWithoutDaysOfWorkInput
-  connect?: PersonWhereUniqueInput
-  disconnect?: PersonWhereUniqueInput
-  delete?: PersonWhereUniqueInput
-  update?: PersonUpdateWithoutDaysOfWorkInput
-  upsert?: PersonUpsertWithoutDaysOfWorkInput
+export interface PersonUpdateWithoutRoleDataInput {
+  firstName?: String
+  lastName?: String
+  gender?: Gender
+  birthDate?: DateTime
+  address?: String
+  daysOfWork?: DayOfWorkUpdateManyWithoutPersonInput
+}
+
+export interface PersonCreateWithoutDaysOfWorkInput {
+  firstName: String
+  lastName: String
+  gender: Gender
+  birthDate: DateTime
+  address: String
+  role?: RoleCreateOneWithoutStaffsInput
+}
+
+export interface PersonSubscriptionWhereInput {
+  AND?: PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput
+  OR?: PersonSubscriptionWhereInput[] | PersonSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: PersonWhereInput
+}
+
+export interface RoleUpdateWithoutStaffsInput {
+  where: RoleWhereUniqueInput
+  data: RoleUpdateWithoutStaffsDataInput
+}
+
+export interface RoleUpdateOneWithoutStaffsInput {
+  create?: RoleCreateWithoutStaffsInput
+  connect?: RoleWhereUniqueInput
+  disconnect?: RoleWhereUniqueInput
+  delete?: RoleWhereUniqueInput
+  update?: RoleUpdateWithoutStaffsInput
+  upsert?: RoleUpsertWithoutStaffsInput
+}
+
+export interface PersonUpdateInput {
+  firstName?: String
+  lastName?: String
+  gender?: Gender
+  birthDate?: DateTime
+  address?: String
+  role?: RoleUpdateOneWithoutStaffsInput
+  daysOfWork?: DayOfWorkUpdateManyWithoutPersonInput
+}
+
+export interface UserCreateInput {
+  email: String
+  password: String
+}
+
+export interface PersonUpsertWithoutDaysOfWorkInput {
+  where: PersonWhereUniqueInput
+  update: PersonUpdateWithoutDaysOfWorkDataInput
+  create: PersonCreateWithoutDaysOfWorkInput
+}
+
+export interface UserSubscriptionWhereInput {
+  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: UserWhereInput
+}
+
+export interface DayOfWorkUpdateInput {
+  date?: DateTime
+  startTime?: DateTime
+  endTime?: DateTime
+  amount?: Int
+  paid?: Boolean
+  person?: PersonUpdateOneWithoutDaysOfWorkInput
 }
 
 export interface UserWhereUniqueInput {
   id?: ID_Input
   email?: String
-}
-
-export interface UserUpdateInput {
-  email?: String
-  password?: String
 }
 
 export interface Node {
@@ -1436,23 +1482,30 @@ export interface User extends Node {
   password: String
 }
 
-export interface Person extends Node {
-  id: ID_Output
-  firstName: String
-  lastName: String
-  gender: Gender
-  birthDate: DateTime
-  address: String
-  role?: Person
-  daysOfWork?: DayOfWork[]
+export interface DayOfWorkSubscriptionPayload {
+  mutation: MutationType
+  node?: DayOfWork
+  updatedFields?: String[]
+  previousValues?: DayOfWorkPreviousValues
+}
+
+export interface AggregateUser {
+  count: Int
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo
+  edges: UserEdge[]
+  aggregate: AggregateUser
 }
 
 export interface BatchPayload {
   count: Long
 }
 
-export interface AggregateUser {
-  count: Int
+export interface DayOfWorkEdge {
+  node: DayOfWork
+  cursor: String
 }
 
 export interface UserSubscriptionPayload {
@@ -1460,6 +1513,10 @@ export interface UserSubscriptionPayload {
   node?: User
   updatedFields?: String[]
   previousValues?: UserPreviousValues
+}
+
+export interface AggregateRole {
+  count: Int
 }
 
 export interface DayOfWork extends Node {
@@ -1472,50 +1529,26 @@ export interface DayOfWork extends Node {
   paid: Boolean
 }
 
-export interface UserEdge {
-  node: User
-  cursor: String
-}
-
-export interface UserConnection {
+export interface RoleConnection {
   pageInfo: PageInfo
-  edges: UserEdge[]
-  aggregate: AggregateUser
+  edges: RoleEdge[]
+  aggregate: AggregateRole
 }
 
-export interface AggregateDayOfWork {
-  count: Int
-}
-
-export interface DayOfWorkConnection {
-  pageInfo: PageInfo
-  edges: DayOfWorkEdge[]
-  aggregate: AggregateDayOfWork
-}
-
-export interface DayOfWorkPreviousValues {
+export interface Person extends Node {
   id: ID_Output
-  date: DateTime
-  startTime: DateTime
-  endTime: DateTime
-  amount: Int
-  paid: Boolean
+  firstName: String
+  lastName: String
+  gender: Gender
+  birthDate: DateTime
+  address: String
+  role?: Role
+  daysOfWork?: DayOfWork[]
 }
 
-export interface RoleEdge {
-  node: Role
+export interface PersonEdge {
+  node: Person
   cursor: String
-}
-
-export interface DayOfWorkSubscriptionPayload {
-  mutation: MutationType
-  node?: DayOfWork
-  updatedFields?: String[]
-  previousValues?: DayOfWorkPreviousValues
-}
-
-export interface AggregatePerson {
-  count: Int
 }
 
 export interface PersonSubscriptionPayload {
@@ -1525,16 +1558,31 @@ export interface PersonSubscriptionPayload {
   previousValues?: PersonPreviousValues
 }
 
-export interface PageInfo {
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-  startCursor?: String
-  endCursor?: String
+export interface PersonConnection {
+  pageInfo: PageInfo
+  edges: PersonEdge[]
+  aggregate: AggregatePerson
 }
 
-export interface DayOfWorkEdge {
-  node: DayOfWork
-  cursor: String
+export interface PersonPreviousValues {
+  id: ID_Output
+  firstName: String
+  lastName: String
+  gender: Gender
+  birthDate: DateTime
+  address: String
+}
+
+export interface AggregateDayOfWork {
+  count: Int
+}
+
+export interface Role extends Node {
+  id: ID_Output
+  name: String
+  description?: String
+  ratePerHour: Int
+  staffs?: Person[]
 }
 
 export interface RolePreviousValues {
@@ -1551,45 +1599,43 @@ export interface RoleSubscriptionPayload {
   previousValues?: RolePreviousValues
 }
 
-export interface Role extends Node {
+export interface DayOfWorkPreviousValues {
   id: ID_Output
-  name: String
-  description?: String
-  ratePerHour: Int
-  staffs?: Person[]
+  date: DateTime
+  startTime: DateTime
+  endTime: DateTime
+  amount: Int
+  paid: Boolean
 }
 
-export interface PersonPreviousValues {
-  id: ID_Output
-  firstName: String
-  lastName: String
-  gender: Gender
-  birthDate: DateTime
-  address: String
-}
-
-export interface AggregateRole {
-  count: Int
-}
-
-export interface PersonConnection {
+export interface DayOfWorkConnection {
   pageInfo: PageInfo
-  edges: PersonEdge[]
-  aggregate: AggregatePerson
+  edges: DayOfWorkEdge[]
+  aggregate: AggregateDayOfWork
 }
 
-export interface PersonEdge {
-  node: Person
+export interface UserEdge {
+  node: User
   cursor: String
 }
 
-export interface RoleConnection {
-  pageInfo: PageInfo
-  edges: RoleEdge[]
-  aggregate: AggregateRole
+export interface PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor?: String
+  endCursor?: String
 }
 
-export type Long = string
+export interface AggregatePerson {
+  count: Int
+}
+
+export interface RoleEdge {
+  node: Role
+  cursor: String
+}
+
+export type DateTime = string
 
 /*
 The `Boolean` scalar type represents `true` or `false`.
@@ -1602,17 +1648,17 @@ The `ID` scalar type represents a unique identifier, often used to refetch an ob
 export type ID_Input = string | number
 export type ID_Output = string
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number
-
-export type DateTime = string
+export type Long = string
 
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number
 
 export interface Schema {
   query: Query

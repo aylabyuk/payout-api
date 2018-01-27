@@ -22,7 +22,7 @@ type Person implements Node {
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role(where: PersonWhereInput): Person
+  role(where: RoleWhereInput): Role
   daysOfWork(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DayOfWork!]
 }
 
@@ -305,7 +305,7 @@ input PersonCreateInput {
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role: PersonCreateOneWithoutRoleInput
+  role: RoleCreateOneWithoutStaffsInput
   daysOfWork: DayOfWorkCreateManyWithoutPersonInput
 }
 
@@ -319,18 +319,13 @@ input PersonCreateOneWithoutDaysOfWorkInput {
   connect: PersonWhereUniqueInput
 }
 
-input PersonCreateOneWithoutRoleInput {
-  create: PersonCreateWithoutRoleInput
-  connect: PersonWhereUniqueInput
-}
-
 input PersonCreateWithoutDaysOfWorkInput {
   firstName: String!
   lastName: String!
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  role: PersonCreateOneWithoutRoleInput
+  role: RoleCreateOneWithoutStaffsInput
 }
 
 input PersonCreateWithoutRoleInput {
@@ -398,7 +393,7 @@ input PersonUpdateInput {
   gender: Gender
   birthDate: DateTime
   address: String
-  role: PersonUpdateOneWithoutRoleInput
+  role: RoleUpdateOneWithoutStaffsInput
   daysOfWork: DayOfWorkUpdateManyWithoutPersonInput
 }
 
@@ -420,22 +415,13 @@ input PersonUpdateOneWithoutDaysOfWorkInput {
   upsert: PersonUpsertWithoutDaysOfWorkInput
 }
 
-input PersonUpdateOneWithoutRoleInput {
-  create: PersonCreateWithoutRoleInput
-  connect: PersonWhereUniqueInput
-  disconnect: PersonWhereUniqueInput
-  delete: PersonWhereUniqueInput
-  update: PersonUpdateWithoutRoleInput
-  upsert: PersonUpsertWithoutRoleInput
-}
-
 input PersonUpdateWithoutDaysOfWorkDataInput {
   firstName: String
   lastName: String
   gender: Gender
   birthDate: DateTime
   address: String
-  role: PersonUpdateOneWithoutRoleInput
+  role: RoleUpdateOneWithoutStaffsInput
 }
 
 input PersonUpdateWithoutDaysOfWorkInput {
@@ -540,7 +526,7 @@ input PersonWhereInput {
   address_not_starts_with: String
   address_ends_with: String
   address_not_ends_with: String
-  role: PersonWhereInput
+  role: RoleWhereInput
   daysOfWork_every: DayOfWorkWhereInput
   daysOfWork_some: DayOfWorkWhereInput
   daysOfWork_none: DayOfWorkWhereInput
@@ -577,6 +563,17 @@ input RoleCreateInput {
   description: String
   ratePerHour: Int!
   staffs: PersonCreateManyWithoutRoleInput
+}
+
+input RoleCreateOneWithoutStaffsInput {
+  create: RoleCreateWithoutStaffsInput
+  connect: RoleWhereUniqueInput
+}
+
+input RoleCreateWithoutStaffsInput {
+  name: String!
+  description: String
+  ratePerHour: Int!
 }
 
 type RoleEdge {
@@ -628,6 +625,32 @@ input RoleUpdateInput {
   description: String
   ratePerHour: Int
   staffs: PersonUpdateManyWithoutRoleInput
+}
+
+input RoleUpdateOneWithoutStaffsInput {
+  create: RoleCreateWithoutStaffsInput
+  connect: RoleWhereUniqueInput
+  disconnect: RoleWhereUniqueInput
+  delete: RoleWhereUniqueInput
+  update: RoleUpdateWithoutStaffsInput
+  upsert: RoleUpsertWithoutStaffsInput
+}
+
+input RoleUpdateWithoutStaffsDataInput {
+  name: String
+  description: String
+  ratePerHour: Int
+}
+
+input RoleUpdateWithoutStaffsInput {
+  where: RoleWhereUniqueInput!
+  data: RoleUpdateWithoutStaffsDataInput!
+}
+
+input RoleUpsertWithoutStaffsInput {
+  where: RoleWhereUniqueInput!
+  update: RoleUpdateWithoutStaffsDataInput!
+  create: RoleCreateWithoutStaffsInput!
 }
 
 input RoleWhereInput {
