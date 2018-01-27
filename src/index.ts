@@ -28,8 +28,37 @@ const resolvers = {
         { data: args },
         info
       )
+    },
+    updateRole(parent, args, context: Context, info) {
+      return context.db.mutation.updateRole({
+        data: {
+          name: args.name,
+          description: args.description,
+          ratePerHour: args.ratePerHour
+        },
+        where: {
+          id: args.id,
+        }
+      })
+    },
+    deleteRole(parent, { id }, context: Context, info) {
+      return context.db.mutation.deleteRole({
+        where: {
+          id
+        }
+      })
     }
   },
+  Subscription: {
+    rolesChanges: {
+      subscribe: async (parent, args, ctx, info) => {
+        return ctx.db.subscription.role(
+          { },
+          info
+        )
+      }
+    }
+  }
 }
 
 const server = new GraphQLServer({

@@ -10,8 +10,14 @@ type Query {
 
 type Mutation {
   createRole(name: String!, description: String, ratePerHour: Int!): Role
+  updateRole(id: ID!, name: String, description: String, ratePerHour: Int): Role
+  deleteRole(id: ID!): Role
   signup(email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+}
+
+type Subscription {
+  rolesChanges: RoleSubscriptionPayload
 }
 
 type AuthPayload {
