@@ -24,7 +24,7 @@ type Role {
 
 type DayOfWork {
   id: ID! @unique
-  person: Person! @relation(name: "DaysPerson")
+  person: Person @relation(name: "DaysPerson")
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!

@@ -7,7 +7,7 @@
 
 type DayOfWork implements Node {
   id: ID!
-  person(where: PersonWhereInput): Person!
+  person(where: PersonWhereInput): Person
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
@@ -81,7 +81,7 @@ input DayOfWorkCreateInput {
   endTime: DateTime!
   amount: Int!
   paid: Boolean
-  person: PersonCreateOneWithoutDaysOfWorkInput!
+  person: PersonCreateOneWithoutDaysOfWorkInput
 }
 
 input DayOfWorkCreateManyWithoutPersonInput {

@@ -11,7 +11,7 @@ const typeDefs = `
 
 type DayOfWork implements Node {
   id: ID!
-  person(where: PersonWhereInput): Person!
+  person(where: PersonWhereInput): Person
   date: DateTime!
   startTime: DateTime!
   endTime: DateTime!
@@ -85,7 +85,7 @@ input DayOfWorkCreateInput {
   endTime: DateTime!
   amount: Int!
   paid: Boolean
-  person: PersonCreateOneWithoutDaysOfWorkInput!
+  person: PersonCreateOneWithoutDaysOfWorkInput
 }
 
 input DayOfWorkCreateManyWithoutPersonInput {
@@ -1313,7 +1313,7 @@ export interface DayOfWorkCreateInput {
   endTime: DateTime
   amount: Int
   paid?: Boolean
-  person: PersonCreateOneWithoutDaysOfWorkInput
+  person?: PersonCreateOneWithoutDaysOfWorkInput
 }
 
 export interface PersonUpdateWithoutDaysOfWorkInput {
@@ -1521,7 +1521,7 @@ export interface AggregateRole {
 
 export interface DayOfWork extends Node {
   id: ID_Output
-  person: Person
+  person?: Person
   date: DateTime
   startTime: DateTime
   endTime: DateTime

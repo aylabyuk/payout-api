@@ -16,4 +16,4 @@ datamodel: datamodel.graphql
 #   import: seed.graphql
 
 # cluster: public-tinydutchess-157/prisma-eu1
-cluster: local
+cluster: local  

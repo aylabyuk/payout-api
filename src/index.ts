@@ -11,7 +11,7 @@ const resolvers = {
       return context.db.query.person({ where: { id: id } }, info)
     },
     people(parent, args, context: Context, info) {
-      return context.db.query.persons({}, info)
+      return context.db.query.persons(args, info)
     },
     role(parent, { id }, context: Context, info) {
       return context.db.query.role({ where: { id: id } }, info)
@@ -90,6 +90,14 @@ const resolvers = {
     rolesChanges: {
       subscribe: async (parent, args, ctx, info) => {
         return ctx.db.subscription.role(
+          { },
+          info
+        )
+      }
+    },
+    peopleChanges: {
+      subscribe: async (parent, args, ctx, info) => {
+        return ctx.db.subscription.person(
           { },
           info
         )

@@ -1,9 +1,17 @@
-# import Post from "./generated/prisma.graphql"
+# import * as test from "./generated/prisma.graphql"
 
 type Query {
   me: User
   person(id: ID!): Person
-  people: [Person]
+  people( 
+    where: PersonWhereInput,
+    orderBy: PersonOrderByInput,
+    skip: Int,
+    after: String,
+    before: String,
+    first: Int,
+    last: Int 
+  ): [Person]
   role(id: ID!): Role
   roles: [Role]
 }
@@ -23,6 +31,7 @@ type Mutation {
 
 type Subscription {
   rolesChanges: RoleSubscriptionPayload
+  peopleChanges: PersonSubscriptionPayload
 }
 
 type AuthPayload {
