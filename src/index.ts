@@ -4,6 +4,8 @@ import { Prisma } from './generated/prisma'
 import { Context } from './utils'
 import { me, signup, login, AuthPayload } from './auth'
 
+var RandomUserGenerator = require('random-user-generator');
+
 const resolvers = {
   Query: {
     me,
@@ -105,6 +107,13 @@ const resolvers = {
     }
   }
 }
+
+// random person generator
+let rug = new RandomUserGenerator()
+rug.getOne(function (user) {
+  console.log(user);
+});
+
 
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',

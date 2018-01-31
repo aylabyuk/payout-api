@@ -22,6 +22,8 @@ type Person implements Node {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  phoneNumber: String
+  picture(where: PictureWhereInput): Picture
   role(where: RoleWhereInput): Role
   daysOfWork(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DayOfWork!]
 }
@@ -52,6 +54,10 @@ type AggregateDayOfWork {
 }
 
 type AggregatePerson {
+  count: Int!
+}
+
+type AggregatePicture {
   count: Int!
 }
 
@@ -251,6 +257,7 @@ scalar Long
 
 type Mutation {
   createPerson(data: PersonCreateInput!): Person!
+  createPicture(data: PictureCreateInput!): Picture!
   createRole(data: RoleCreateInput!): Role!
   createDayOfWork(data: DayOfWorkCreateInput!): DayOfWork!
   createUser(data: UserCreateInput!): User!
@@ -267,10 +274,12 @@ type Mutation {
   upsertDayOfWork(where: DayOfWorkWhereUniqueInput!, create: DayOfWorkCreateInput!, update: DayOfWorkUpdateInput!): DayOfWork!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyPersons(data: PersonUpdateInput!, where: PersonWhereInput!): BatchPayload!
+  updateManyPictures(data: PictureUpdateInput!, where: PictureWhereInput!): BatchPayload!
   updateManyRoles(data: RoleUpdateInput!, where: RoleWhereInput!): BatchPayload!
   updateManyDayOfWorks(data: DayOfWorkUpdateInput!, where: DayOfWorkWhereInput!): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput!): BatchPayload!
   deleteManyPersons(where: PersonWhereInput!): BatchPayload!
+  deleteManyPictures(where: PictureWhereInput!): BatchPayload!
   deleteManyRoles(where: RoleWhereInput!): BatchPayload!
   deleteManyDayOfWorks(where: DayOfWorkWhereInput!): BatchPayload!
   deleteManyUsers(where: UserWhereInput!): BatchPayload!
@@ -305,6 +314,8 @@ input PersonCreateInput {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  phoneNumber: String
+  picture: PictureCreateOneInput
   role: RoleCreateOneWithoutStaffsInput
   daysOfWork: DayOfWorkCreateManyWithoutPersonInput
 }
@@ -325,6 +336,8 @@ input PersonCreateWithoutDaysOfWorkInput {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  phoneNumber: String
+  picture: PictureCreateOneInput
   role: RoleCreateOneWithoutStaffsInput
 }
 
@@ -334,6 +347,8 @@ input PersonCreateWithoutRoleInput {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  phoneNumber: String
+  picture: PictureCreateOneInput
   daysOfWork: DayOfWorkCreateManyWithoutPersonInput
 }
 
@@ -355,6 +370,8 @@ enum PersonOrderByInput {
   birthDate_DESC
   address_ASC
   address_DESC
+  phoneNumber_ASC
+  phoneNumber_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -368,6 +385,7 @@ type PersonPreviousValues {
   gender: Gender!
   birthDate: DateTime!
   address: String!
+  phoneNumber: String
 }
 
 type PersonSubscriptionPayload {
@@ -393,6 +411,8 @@ input PersonUpdateInput {
   gender: Gender
   birthDate: DateTime
   address: String
+  phoneNumber: String
+  picture: PictureUpdateOneInput
   role: RoleUpdateOneWithoutStaffsInput
   daysOfWork: DayOfWorkUpdateManyWithoutPersonInput
 }
@@ -421,6 +441,8 @@ input PersonUpdateWithoutDaysOfWorkDataInput {
   gender: Gender
   birthDate: DateTime
   address: String
+  phoneNumber: String
+  picture: PictureUpdateOneInput
   role: RoleUpdateOneWithoutStaffsInput
 }
 
@@ -435,6 +457,8 @@ input PersonUpdateWithoutRoleDataInput {
   gender: Gender
   birthDate: DateTime
   address: String
+  phoneNumber: String
+  picture: PictureUpdateOneInput
   daysOfWork: DayOfWorkUpdateManyWithoutPersonInput
 }
 
@@ -526,6 +550,21 @@ input PersonWhereInput {
   address_not_starts_with: String
   address_ends_with: String
   address_not_ends_with: String
+  phoneNumber: String
+  phoneNumber_not: String
+  phoneNumber_in: [String!]
+  phoneNumber_not_in: [String!]
+  phoneNumber_lt: String
+  phoneNumber_lte: String
+  phoneNumber_gt: String
+  phoneNumber_gte: String
+  phoneNumber_contains: String
+  phoneNumber_not_contains: String
+  phoneNumber_starts_with: String
+  phoneNumber_not_starts_with: String
+  phoneNumber_ends_with: String
+  phoneNumber_not_ends_with: String
+  picture: PictureWhereInput
   role: RoleWhereInput
   daysOfWork_every: DayOfWorkWhereInput
   daysOfWork_some: DayOfWorkWhereInput
@@ -536,8 +575,131 @@ input PersonWhereUniqueInput {
   id: ID
 }
 
+type Picture {
+  large: String
+  medium: String
+  thumbnail: String
+}
+
+type PictureConnection {
+  pageInfo: PageInfo!
+  edges: [PictureEdge]!
+  aggregate: AggregatePicture!
+}
+
+input PictureCreateInput {
+  large: String
+  medium: String
+  thumbnail: String
+}
+
+input PictureCreateOneInput {
+  create: PictureCreateInput
+}
+
+type PictureEdge {
+  node: Picture!
+  cursor: String!
+}
+
+enum PictureOrderByInput {
+  large_ASC
+  large_DESC
+  medium_ASC
+  medium_DESC
+  thumbnail_ASC
+  thumbnail_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type PicturePreviousValues {
+  large: String
+  medium: String
+  thumbnail: String
+}
+
+type PictureSubscriptionPayload {
+  mutation: MutationType!
+  node: Picture
+  updatedFields: [String!]
+  previousValues: PicturePreviousValues
+}
+
+input PictureSubscriptionWhereInput {
+  AND: [PictureSubscriptionWhereInput!]
+  OR: [PictureSubscriptionWhereInput!]
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PictureWhereInput
+}
+
+input PictureUpdateInput {
+  large: String
+  medium: String
+  thumbnail: String
+}
+
+input PictureUpdateOneInput {
+  create: PictureCreateInput
+}
+
+input PictureWhereInput {
+  AND: [PictureWhereInput!]
+  OR: [PictureWhereInput!]
+  large: String
+  large_not: String
+  large_in: [String!]
+  large_not_in: [String!]
+  large_lt: String
+  large_lte: String
+  large_gt: String
+  large_gte: String
+  large_contains: String
+  large_not_contains: String
+  large_starts_with: String
+  large_not_starts_with: String
+  large_ends_with: String
+  large_not_ends_with: String
+  medium: String
+  medium_not: String
+  medium_in: [String!]
+  medium_not_in: [String!]
+  medium_lt: String
+  medium_lte: String
+  medium_gt: String
+  medium_gte: String
+  medium_contains: String
+  medium_not_contains: String
+  medium_starts_with: String
+  medium_not_starts_with: String
+  medium_ends_with: String
+  medium_not_ends_with: String
+  thumbnail: String
+  thumbnail_not: String
+  thumbnail_in: [String!]
+  thumbnail_not_in: [String!]
+  thumbnail_lt: String
+  thumbnail_lte: String
+  thumbnail_gt: String
+  thumbnail_gte: String
+  thumbnail_contains: String
+  thumbnail_not_contains: String
+  thumbnail_starts_with: String
+  thumbnail_not_starts_with: String
+  thumbnail_ends_with: String
+  thumbnail_not_ends_with: String
+}
+
 type Query {
   persons(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Person]!
+  pictures(where: PictureWhereInput, orderBy: PictureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Picture]!
   roles(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Role]!
   dayOfWorks(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DayOfWork]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
@@ -546,6 +708,7 @@ type Query {
   dayOfWork(where: DayOfWorkWhereUniqueInput!): DayOfWork
   user(where: UserWhereUniqueInput!): User
   personsConnection(where: PersonWhereInput, orderBy: PersonOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PersonConnection!
+  picturesConnection(where: PictureWhereInput, orderBy: PictureOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PictureConnection!
   rolesConnection(where: RoleWhereInput, orderBy: RoleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleConnection!
   dayOfWorksConnection(where: DayOfWorkWhereInput, orderBy: DayOfWorkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DayOfWorkConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -718,6 +881,7 @@ input RoleWhereUniqueInput {
 
 type Subscription {
   person(where: PersonSubscriptionWhereInput): PersonSubscriptionPayload
+  picture(where: PictureSubscriptionWhereInput): PictureSubscriptionPayload
   role(where: RoleSubscriptionWhereInput): RoleSubscriptionPayload
   dayOfWork(where: DayOfWorkSubscriptionWhereInput): DayOfWorkSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload

@@ -10,6 +10,7 @@
     "bcryptjs": "^2.4.3",
     "graphql": "^0.12.3",
     "graphql-import": "0.4.1",
+    "graphql-schema-from-json": "0.0.3",
     "graphql-yoga": "1.2.0",
     "jsonwebtoken": "^8.1.1",
     "prisma-binding": "1.4.0"
