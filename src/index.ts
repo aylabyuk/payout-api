@@ -4,7 +4,6 @@ import { Prisma } from './generated/prisma'
 import { Context } from './utils'
 import { me, signup, login, AuthPayload } from './auth'
 
-var RandomUserGenerator = require('random-user-generator');
 
 const resolvers = {
   Query: {
@@ -33,7 +32,14 @@ const resolvers = {
           gender: args.gender,
           birthDate: args.birthdate,
           address: args.address,
-          role: { connect: { id: args.roleId }}
+          phoneNumber: args.phoneNumber,
+          email: args.email,
+          role: { connect: { id: args.roleId }},
+          picture: { create: {
+            large: args.picLarge,
+            medium: args.picMedium,
+            thumbnail: args.picThumbnail
+          }}
          }
       },
         info
@@ -86,6 +92,26 @@ const resolvers = {
           id
         }
       })
+    },
+    createDayOfWork(parent, args, context: Context, info) {
+      return context.db.mutation.createDayOfWork({
+        data: {
+          person: { connect: { id: args.personId } },
+          amount: args.amount,
+          date: args.date,
+          startTime: args.startTime,
+          endTime: args.endTime
+        }
+      })
+    },
+    setDayOfWorkPaid(parent, args, context: Context, info) {
+      return context.db.mutation.updateDayOfWork({
+        data: {
+          paid: true
+        }, where: {
+          id: args.id
+        }
+      })
     }
   },
   Subscription: {
@@ -108,21 +134,14 @@ const resolvers = {
   }
 }
 
-// random person generator
-let rug = new RandomUserGenerator()
-rug.getOne(function (user) {
-  console.log(user);
-});
-
-
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers,
   context: req => ({
     ...req,
     db: new Prisma({
-      endpoint: 'http://localhost:4466/payout-app/dev',
-      // endpoint: 'https://eu1.prisma.sh/public-tinydutchess-157/payout-app/dev', // the endpoint of the Prisma DB service
+      // endpoint: 'http://localhost:4466/payout-app/dev',
+      endpoint: 'https://eu1.prisma.sh/public-tinydutchess-157/payout-app/dev', // the endpoint of the Prisma DB service
       secret: 'mysecret123', // specified in database/prisma.yml
       debug: true, // log all GraphQL queries & mutations
     }),

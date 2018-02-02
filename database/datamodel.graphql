@@ -5,7 +5,8 @@ type Person {
   gender: Gender!
   birthDate: DateTime!
   address: String!
-  phoneNumber: String
+  phoneNumber: String @unique
+  email: String @unique
   picture: Picture
   role: Role @relation(name: "People")
   daysOfWork: [DayOfWork!]! @relation(name: "DaysPerson")
@@ -17,6 +18,7 @@ enum Gender {
 }
 
 type Picture {
+  id: ID! @unique
   large: String
   medium: String
   thumbnail: String

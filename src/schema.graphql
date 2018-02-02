@@ -17,16 +17,35 @@ type Query {
 }
 
 type Mutation {
-  createPerson(firstName: String!, lastName: String!, gender: Gender!, birthdate:DateTime!, 
-    address: String!, roleId: ID!): Person
+  createPerson(
+    firstName: String!
+    lastName: String!
+    gender: Gender!
+    birthdate: DateTime! 
+    address: String!
+    phoneNumber: String
+    email: String
+    roleId: ID!
+    picLarge: String
+    picMedium: String
+    picThumbnail: String
+  ): Person
   updatePerson(id: ID!, firstName: String!, lastName: String!, gender: Gender!, birthdate:DateTime!, 
-    address: String!, roleId: ID!): Person
+    address: String!, phoneNumber: String, email: String, roleId: ID!): Person
   deletePerson(id: ID!): Person
   createRole(name: String!, description: String, ratePerHour: Int!): Role
   updateRole(id: ID!, name: String, description: String, ratePerHour: Int): Role
   deleteRole(id: ID!): Role
   signup(email: String!, password: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
+  createDayOfWork(
+    personId: ID!
+    date: DateTime!
+    startTime: DateTime!
+    endTime: DateTime!
+    amount: Int!
+  ): DayOfWork
+  setDayOfWorkPaid(id: ID!): DayOfWork
 }
 
 type Subscription {
